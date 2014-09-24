@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg">#ff7F0037</color>
+    <color name="page_bg">#fffff2d1</color>
+    <color name="text_color">#ff000000</color>
+    <color name="sel_bg">#ffFFD8D6</color>
+    <color name="page_bg_trasparent">#88fff2d1</color>
+    
+</resources>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical"
+    tools:context=".Registration" >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        android:layout_marginTop="5dip"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/vitamines"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dip"
+            android:layout_weight="1"
+            android:background="@drawable/bg_tab_shape"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/vitamin_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/vitamines"
+                android:textColor="@color/text_color" />
+        </LinearLayout>
+
+	      <LinearLayout
+	          android:id="@+id/minerals"
+	          android:layout_width="0dp"
+	          android:layout_height="wrap_content"
+	          android:layout_marginRight="2dip"
+	          android:layout_weight="1"
+	          android:background="@drawable/bg_tab_sel_shape"
+	          android:orientation="vertical" >
+	
+	          <ImageView
+	              android:layout_width="wrap_content"
+	              android:layout_height="wrap_content"
+	              android:layout_gravity="center"
+	              android:src="@drawable/mineral_icon" />
+	
+	          <TextView
+	              android:layout_width="wrap_content"
+	              android:layout_height="wrap_content"
+	              android:layout_gravity="center"
+	              android:text="@string/minerals"
+	              android:textColor="@color/text_color" />
+	      </LinearLayout>
+
+	      <LinearLayout
+	          android:id="@+id/food"
+	          android:layout_width="0dp"
+	          android:layout_height="wrap_content"
+	          android:layout_weight="1"
+	          android:background="@drawable/bg_tab_sel_shape"
+	          android:orientation="vertical" >
+	
+	          <ImageView
+	              android:layout_width="wrap_content"
+	              android:layout_height="wrap_content"
+	              android:layout_gravity="center"
+	              android:src="@drawable/meal_icon" />
+	
+	          <TextView
+	              android:layout_width="wrap_content"
+	              android:layout_height="wrap_content"
+	              android:layout_gravity="center"
+	              android:text="@string/food"
+	              android:textColor="@color/text_color" />
+	      </LinearLayout>
+	  </LinearLayout>
+
+            
+       <ListView
+           android:id="@android:id/list"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent" 
+	        android:background="@drawable/bg_list_shape"
+	        android:layout_marginLeft="5dp"
+	        android:layout_marginRight="5dp"
+	        android:layout_marginBottom="5dp" 
+	        android:padding="5dip">
+
+       </ListView>
+</LinearLayout>

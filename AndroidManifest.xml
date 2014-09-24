@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="olga.com.healthy.food"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="8" />
+    <permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></permission>
+    	<application 
+    	    android:allowBackup="false" 
+    	    android:icon="@drawable/icon_bordo" 
+    	    android:label="@string/app_name" 
+    	    android:theme="@android:style/Theme.NoTitleBar">
+        <activity android:name="olga.com.healthy.food.ui.screens.Registration">
+            
+        </activity>
+        <activity android:name=".ui.screens.FirstScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.screens.Options"></activity>
+        <activity android:name="olga.com.healthy.food.ui.screens.List"></activity>
+        <activity android:name=".ui.screens.Details"></activity>
+        <activity android:name=".ui.screens.Menu"></activity>
+    </application>
+
+</manifest>

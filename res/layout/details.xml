@@ -1,0 +1,108 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical"
+    tools:context=".Registration" >
+    
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/title" />
+
+
+    <LinearLayout
+        android:id="@+id/parent_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp" >
+
+
+       <LinearLayout
+           android:id="@+id/vitamines"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:padding="5dip"
+           android:orientation="vertical" 
+           android:background="@drawable/bg_shape">
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content" >
+
+               <ImageView
+                   android:id="@+id/image"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginRight="5dip"
+                   android:src="@drawable/vitamin_icon" />
+
+               <TextView
+                   android:id="@+id/name"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:text="@string/name"
+                   android:textColor="@color/text_color" />
+
+           </LinearLayout>
+
+           <TextView
+               android:id="@+id/description"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center"
+               android:text="@string/description" />
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="match_parent" >
+
+               <LinearLayout
+                   android:layout_width="0dp"
+                   android:layout_height="match_parent"
+                   android:layout_weight="1"
+                   android:orientation="vertical" >
+
+                   <TextView
+                       android:id="@+id/columnName1"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_gravity="center"
+                       android:text="@string/vitamines" />
+
+                   <ListView
+                       android:id="@+id/column1"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent">
+                   </ListView>
+               </LinearLayout>
+
+               <LinearLayout
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1"
+                   android:orientation="vertical" >
+
+                   <TextView
+                       android:id="@+id/columnName2"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_gravity="center"
+                       android:text="@string/minerals" />
+
+                   <ListView
+                       android:id="@+id/column2"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content">
+                   </ListView>
+               </LinearLayout>
+           </LinearLayout>
+
+       </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
