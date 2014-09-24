@@ -31,5 +31,6 @@
     <string name="change_date">Change Date</string>
     <string name="meal">Meal</string>
     <string name="time">Time</string>
+    <string name="add_item">Add</string>
 
 </resources>

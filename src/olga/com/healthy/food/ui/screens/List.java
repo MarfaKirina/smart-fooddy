@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import olga.com.healthy.food.R;
 import olga.com.healthy.food.db.DataBaseHelper;
+import olga.com.healthy.food.model.Details;
 import olga.com.healthy.food.ui.helpers.ListAdapter;
 import olga.com.healthy.food.utils.Logger;
 import android.app.ListActivity;
@@ -12,8 +13,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+
 
 public class List extends ListActivity {
 	public static String TAB_INDEX = "tab_index";
@@ -24,6 +24,7 @@ public class List extends ListActivity {
 	private View vitamines;
 	private View minerals;
 	private View food;
+	private View addItem;
 	private int tab;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +122,8 @@ public class List extends ListActivity {
 	
 	private void insertVitamines(ListAdapter adapter, DataBaseHelper dbHelper){
 		try{
-			Vector<olga.com.healthy.food.model.Details> vitamines = dbHelper.getVitamines();
+			Vector<Details> vitamines = dbHelper.getVitamines();
+			//vitamines.insertElementAt(getAddItem(), 0);
 			adapter.setList(vitamines);
 		}catch(Exception e){
 			Logger.log(e);
@@ -129,10 +131,22 @@ public class List extends ListActivity {
 	}
 	
 	private void insertMinerals(ListAdapter adapter, DataBaseHelper dbHelper){
-		adapter.setList(new Vector<olga.com.healthy.food.model.Details>());
+		Vector<Details> minerals = dbHelper.getMinerals();
+		//minerals.insertElementAt(getAddItem(), 0);
+		adapter.setList(minerals);
 	}
 	
 	private void insertFood(ListAdapter adapter, DataBaseHelper dbHelper){
-		adapter.setList(new Vector<olga.com.healthy.food.model.Details>());
+		Vector<Details> food = dbHelper.getFood();
+		//food.insertElementAt(getAddItem(), 0);
+		adapter.setList(food);
+	}
+	
+	private Details getAddItem()
+	{
+		Details result = new Details();
+		result.imageId = R.drawable.add_icon;
+		result.name = getResources().getString(R.string.add_item);
+		return result;
 	}
 }

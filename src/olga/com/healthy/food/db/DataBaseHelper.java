@@ -120,5 +120,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		}
 		return result;
 	}
+	
+	public Vector<Details> getMinerals(){
+		return new Vector<Details>();
+	}
+	
+	public Vector<Details> getFood(){
+		return new Vector<Details>();
+	}
 
 }
