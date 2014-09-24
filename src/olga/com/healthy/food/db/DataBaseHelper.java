@@ -22,6 +22,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	final private static int version = 1;
 	
 	final private static String VITAMINES_TABLE = "vitamines";
+	final private static String MINERALS_TABLE = "minerals";
+	final private static String FOOD_TABLE = "\"food\"";
 	
 	final private static String COLUMN_ID = "_id";
 	final private static String COLUMN_NAME = "name";
@@ -122,11 +124,47 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	}
 	
 	public Vector<Details> getMinerals(){
-		return new Vector<Details>();
+		Vector<Details> result = new Vector<Details>();
+		try{
+			Cursor cursor = db.query("minerals", null, null, null, null, null, null);
+			int indexId = cursor.getColumnIndex("_id");
+			int indexName = cursor.getColumnIndex("name");
+			int indexDescription = cursor.getColumnIndex("description");
+			while(cursor.moveToNext()){
+				Details vitamin = new Details();
+				vitamin.hasProducts = true;
+				vitamin.imageId = R.drawable.vitamin_icon;
+				vitamin.id = cursor.getInt(indexId);
+				vitamin.name = cursor.getString(indexName);
+				vitamin.description = cursor.getString(indexDescription);
+				result.add(vitamin);
+			}
+		}catch(Exception e){
+			Logger.log(e);
+		}
+		return result;
 	}
 	
 	public Vector<Details> getFood(){
-		return new Vector<Details>();
+		Vector<Details> result = new Vector<Details>();
+		try{
+			Cursor cursor = db.query(FOOD_TABLE, null, null, null, null, null, null);
+			int indexId = cursor.getColumnIndex("_id");
+			int indexName = cursor.getColumnIndex("name");
+			int indexDescription = cursor.getColumnIndex("description");
+			while(cursor.moveToNext()){
+				Details vitamin = new Details();
+				vitamin.hasProducts = true;
+				vitamin.imageId = R.drawable.vitamin_icon;
+				vitamin.id = cursor.getInt(indexId);
+				vitamin.name = cursor.getString(indexName);
+				vitamin.description = cursor.getString(indexDescription);
+				result.add(vitamin);
+			}
+		}catch(Exception e){
+			Logger.log(e);
+		}
+		return result;
 	}
 
 }
