@@ -11,7 +11,12 @@ public class Details implements Serializable{
 	public String name = "";
 	public String description = "";
 	public int imageId = R.drawable.meal_icon;
-	public boolean hasProducts = false;
-	public Vector<Details> list1 = new Vector<Details>();
-	public Vector<Details> list2 = new Vector<Details>();
+	
+	public Details(Details details)
+	{
+		this.id = details.id;
+		this.name = details.name;
+		this.description = details.description;
+		this.imageId = details.imageId;
+	}
 }

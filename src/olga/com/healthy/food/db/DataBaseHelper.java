@@ -17,17 +17,28 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
-	final private static String DB_PATH = "/data/data/olga.com.healthy.food/databases/";
 	final private static String DB_NAME = "smart_fooddy_database";
 	final private static int version = 1;
 	
 	final private static String VITAMINES_TABLE = "vitamines";
 	final private static String MINERALS_TABLE = "minerals";
-	final private static String FOOD_TABLE = "\"food\"";
+	final private static String FOOD_TABLE = "food";
+	final private static String FOOD_MINERALS_TABLE = "food_minerals";
+	final private static String FOOD_VITAMINES_TABLE = "food_vitamines";
 	
-	final private static String COLUMN_ID = "_id";
+	final private static String COLUMN_ID = "id";
 	final private static String COLUMN_NAME = "name";
 	final private static String COLUMN_DESCRIPTION = "description";
+	final private static String COLUMN_ENERGY = "energy";
+	final private static String COLUMN_CARBOHYDRATES = "carbohydrates";
+	final private static String COLUMN_C_UNITS = "c_units";
+	final private static String COLUMN_FAT = "fat";
+	final private static String COLUMN_F_UNITS = "f_units";
+	final private static String COLUMN_PROTEIN = "protein";
+	final private static String COLUMNE_P_UNITS = "p_units";
+	final private static String COLUMN_FOOD_ID = "food_id";
+	final private static String COLUMN_WEIGHT = "weight";
+	final private static String COLUMN_UNITS = "units";
 	
 	private Context context;
 	private SQLiteDatabase db;
@@ -48,7 +59,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	}
 	
 	public void createDB() throws IOException{
-		boolean isExists = checkDataBase();
+		boolean isExists = false;//checkDataBase();
 		if(!isExists){
 			this.getReadableDatabase();
 			try{
@@ -62,7 +73,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	private boolean checkDataBase(){
 		SQLiteDatabase checkDB = null;
 		try{
-			String path = DB_PATH + DB_NAME;
+			String path = context.getFilesDir().getPath() + DB_NAME;
 			checkDB = SQLiteDatabase.openOrCreateDatabase(path, null);
 		}catch(Exception e){
 			return false;
@@ -75,7 +86,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	
 	private void copyDataBase() throws IOException{
 		InputStream is = context.getAssets().open("smart_fooddy_database");
-		OutputStream out = new FileOutputStream(DB_PATH + DB_NAME);
+		OutputStream out = new FileOutputStream(context.getFilesDir().getPath() + DB_NAME);
 		byte[] buffer = new byte[1024];
 		int length = is.read(buffer);
 		while(length > 0){
@@ -89,7 +100,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	}
 	
 	public void openDataBase(){
-		String path = DB_PATH + DB_NAME;
+		String path = context.getFilesDir().getPath() + DB_NAME;
 		db = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READWRITE);
 	}
 	
@@ -105,40 +116,38 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		Vector<Details> result = new Vector<Details>();
 		try{
 			Cursor cursor = db.query(VITAMINES_TABLE, null, null, null, null, null, null);
-			int indexId = cursor.getColumnIndex("_id");
-			int indexName = cursor.getColumnIndex("name");
-			int indexDescription = cursor.getColumnIndex("description");
-			while(cursor.moveToNext()){
-				Details vitamin = new Details();
-				vitamin.hasProducts = true;
-				vitamin.imageId = R.drawable.vitamin_icon;
-				vitamin.id = cursor.getInt(indexId);
-				vitamin.name = cursor.getString(indexName);
-				vitamin.description = cursor.getString(indexDescription);
-				result.add(vitamin);
-			}
+			insertDetails(cursor, result);
 		}catch(Exception e){
 			Logger.log(e);
 		}
 		return result;
 	}
 	
+	private static void insertDetails(Cursor cursor, Vector<Details> result)
+	{
+		if(cursor == null || result == null)
+		{
+			throw new NullPointerException("One of the Iiput arguments is null");
+		}
+		int indexId = cursor.getColumnIndex(COLUMN_ID);
+		int indexName = cursor.getColumnIndex(COLUMN_NAME);
+		int indexDescription = cursor.getColumnIndex(COLUMN_DESCRIPTION);
+		cursor.moveToFirst();
+		do{
+			Details details = new Details();
+			details.imageId = R.drawable.vitamin_icon;
+			details.id = cursor.getInt(indexId);
+			details.name = cursor.getString(indexName);
+			details.description = cursor.getString(indexDescription);
+			result.add(details);
+		}while(cursor.moveToNext());
+	}
+	
 	public Vector<Details> getMinerals(){
 		Vector<Details> result = new Vector<Details>();
 		try{
-			Cursor cursor = db.query("minerals", null, null, null, null, null, null);
-			int indexId = cursor.getColumnIndex("_id");
-			int indexName = cursor.getColumnIndex("name");
-			int indexDescription = cursor.getColumnIndex("description");
-			while(cursor.moveToNext()){
-				Details vitamin = new Details();
-				vitamin.hasProducts = true;
-				vitamin.imageId = R.drawable.vitamin_icon;
-				vitamin.id = cursor.getInt(indexId);
-				vitamin.name = cursor.getString(indexName);
-				vitamin.description = cursor.getString(indexDescription);
-				result.add(vitamin);
-			}
+			Cursor cursor = db.query(MINERALS_TABLE, null, null, null, null, null, null);
+			insertDetails(cursor, result);
 		}catch(Exception e){
 			Logger.log(e);
 		}
@@ -149,18 +158,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		Vector<Details> result = new Vector<Details>();
 		try{
 			Cursor cursor = db.query(FOOD_TABLE, null, null, null, null, null, null);
-			int indexId = cursor.getColumnIndex("_id");
-			int indexName = cursor.getColumnIndex("name");
-			int indexDescription = cursor.getColumnIndex("description");
-			while(cursor.moveToNext()){
-				Details vitamin = new Details();
-				vitamin.hasProducts = true;
-				vitamin.imageId = R.drawable.vitamin_icon;
-				vitamin.id = cursor.getInt(indexId);
-				vitamin.name = cursor.getString(indexName);
-				vitamin.description = cursor.getString(indexDescription);
-				result.add(vitamin);
-			}
+			insertDetails(cursor, result);
 		}catch(Exception e){
 			Logger.log(e);
 		}

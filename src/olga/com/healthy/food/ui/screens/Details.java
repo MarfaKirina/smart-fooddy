@@ -52,18 +52,16 @@ public class Details extends Activity{
 		column1 = (ListView)findViewById(R.id.column1);
 		columnAdapter1 = new ListAdapter(this);
 		column1.setAdapter(columnAdapter1);
-		insertList(columnAdapter1, details.list1);
+		//insertList(columnAdapter1, details.list1);
 		
 		columnName2 = (TextView)findViewById(R.id.columnName2);
 		column2 = (ListView)findViewById(R.id.column2);
 		columnAdapter2 = new ListAdapter(this);
 		column2.setAdapter(columnAdapter2);
-		insertList(columnAdapter2, details.list2);
+		//insertList(columnAdapter2, details.list2);
 		
-		if(details.hasProducts){
-			columnName1.setVisibility(View.GONE);
-			columnName2.setVisibility(View.GONE);
-		}
+		columnName1.setVisibility(View.GONE);
+		columnName2.setVisibility(View.GONE);
 	}
 	
 	private void insertList(ListAdapter adapter, Vector<olga.com.healthy.food.model.Details> list){
