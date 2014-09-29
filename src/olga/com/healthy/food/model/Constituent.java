@@ -8,4 +8,10 @@ public class Constituent extends Details {
 	
 	public Vector<NutritionalValuePer100G> food;
 
+	public Constituent(Details details)
+	{
+		super(details);
+		food = new Vector<NutritionalValuePer100G>();
+	}
+	
 }
