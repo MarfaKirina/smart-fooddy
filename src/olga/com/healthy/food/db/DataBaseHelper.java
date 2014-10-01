@@ -238,9 +238,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	private Vector<NutritionalValuePer100G> getList(int id, String columnName, String tableName){
 		Vector<NutritionalValuePer100G> result = new Vector<NutritionalValuePer100G>();
 		try{
-			Cursor cursor = db.query(tableName, new String[]{FOOD_ID_COLUMN, WEIGHT_COLUMN, UNITS_COLUMN}, 
+			String columnId;
+			if(columnName == FOOD_ID_COLUMN){
+				columnId = ID_COLUMN;
+			}else {
+				columnId = FOOD_ID_COLUMN;
+			}
+			Cursor cursor = db.query(tableName, new String[]{columnId, WEIGHT_COLUMN, UNITS_COLUMN}, 
 					columnName + "=" + id, null, null, null, null);
-			int foodId = cursor.getColumnIndex(FOOD_ID_COLUMN);
+			int componentId = cursor.getColumnIndex(columnId);
 			int weight = cursor.getColumnIndex(WEIGHT_COLUMN);
 			int units = cursor.getColumnIndex(UNITS_COLUMN);
 			if(!cursor.moveToFirst())
@@ -250,7 +256,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 			
 			do{
 				NutritionalValuePer100G element = new NutritionalValuePer100G();
-				element.constituentId = cursor.getInt(foodId);
+				element.constituentId = cursor.getInt(componentId);
 				element.value = cursor.getDouble(weight);
 				element.unitsId = cursor.getInt(units);
 				result.add(element);
@@ -277,6 +283,35 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 			}while(cursor.moveToNext());
 		}catch(Exception e){
 			Logger.log(e);
+		}
+		return result;
+	}
+	
+	/**
+	 * Constructs Vector with information about each connection - weight of component in 100 g of the food
+	 * For example: table of the food, weights of the mineral or vitamin in all the food, that has this component.
+	 * table of the vitamins, weights of the vitamins in some food, the same
+	 * @param table - table of connection
+	 * @param weights - short information about weight
+	 * @param units - table of the units will be the same for all tables
+	 * @return
+	 */
+	public static Vector<Details> mergeInfo(Vector<Details> table, Vector<NutritionalValuePer100G> weights, Vector<SimpleItem> units) {
+		if(weights == null || table == null || table.size() == 0 || units == null){
+			return null;
+		}
+		Vector<Details> result = new Vector<Details>();
+		for(int i = 0; i < weights.size(); i++){
+			Details details = new Details();
+			NutritionalValuePer100G value = weights.get(i);
+			details.id = value.constituentId;
+			
+			Details element = table.get(details.id - 1);
+			details.name = element.name;
+			details.description = "";
+			details.description += value.value;
+			details.description += " " + units.get(value.unitsId - 1).value;
+			result.add(details);
 		}
 		return result;
 	}

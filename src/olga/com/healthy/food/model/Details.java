@@ -1,7 +1,6 @@
 package olga.com.healthy.food.model;
 
 import java.io.Serializable;
-import java.util.Vector;
 
 import olga.com.healthy.food.R;
 
@@ -23,22 +22,17 @@ public class Details implements Serializable{
 		this.imageId = details.imageId;
 	}
 	
-	public static Vector<Details> getConnections(Vector<Details> table, Vector<NutritionalValuePer100G> connection, Vector<SimpleItem> units) {
-		if(connection == null || table == null || units == null){
-			return null;
+	@Override
+	public boolean equals(Object o) {
+		if(o instanceof Details)
+		{
+			Details d = (Details)o;
+			if(id == d.id){
+				return name.equals(d.name);
+			}else{
+				return false;
+			}
 		}
-		Vector<Details> result = new Vector<Details>();
-		for(int i = 0; i < connection.size(); i++){
-			Details details = new Details();
-			NutritionalValuePer100G value = connection.get(i);
-			details.id = value.constituentId;
-			Food food = (Food)table.get(details.id - 1);
-			details.name = food.name;
-			details.description = "";
-			details.description += value.value;
-			details.description += " " + units.get(value.unitsId - 1);
-			result.add(details);
-		}
-		return result;
+		return super.equals(o);
 	}
 }

@@ -3,11 +3,15 @@ package olga.com.healthy.food.ui.screens;
 import java.util.Vector;
 
 import olga.com.healthy.food.R;
+import olga.com.healthy.food.db.DataBaseHelper;
+import olga.com.healthy.food.model.Constituent;
+import olga.com.healthy.food.model.Food;
+import olga.com.healthy.food.model.SimpleItem;
 import olga.com.healthy.food.ui.helpers.ListAdapter;
+import olga.com.healthy.food.utils.Logger;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,22 +23,24 @@ public class Details extends Activity{
 	public static final String DETAILS = "details";
 	
 	protected olga.com.healthy.food.model.Details details;
+	protected Vector<olga.com.healthy.food.model.Details> column1info;
+	protected Vector<olga.com.healthy.food.model.Details> column2info;
+	protected Vector<SimpleItem> units;
 	
 	protected ImageView image;
 	protected TextView name;
 	protected TextView description;
-	protected TextView columnName1;
 	protected ListView column1;
 	protected ListAdapter columnAdapter1;
-	protected TextView columnName2;
 	protected ListView column2;
-	protected ListAdapter columnAdapter2;
+	protected ListAdapter column2Adapter;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.details);
 		Intent intent = getIntent();
 		details = (olga.com.healthy.food.model.Details)intent.getSerializableExtra(DETAILS);
+		initColumnsInfo();
 		
 		image = (ImageView)findViewById(R.id.image);
 		try{
@@ -48,20 +54,53 @@ public class Details extends Activity{
 		description = (TextView)findViewById(R.id.description);
 		description.setText(details.description);
 		
-		columnName1 = (TextView)findViewById(R.id.columnName1);
 		column1 = (ListView)findViewById(R.id.column1);
-		columnAdapter1 = new ListAdapter(this);
-		column1.setAdapter(columnAdapter1);
-		//insertList(columnAdapter1, details.list1);
-		
-		columnName2 = (TextView)findViewById(R.id.columnName2);
 		column2 = (ListView)findViewById(R.id.column2);
-		columnAdapter2 = new ListAdapter(this);
-		column2.setAdapter(columnAdapter2);
-		//insertList(columnAdapter2, details.list2);
+			
+		if(column1info != null && column1info.size() > 0){
+			columnAdapter1 = new ListAdapter(this);
+			column1.setAdapter(columnAdapter1);
+			insertList(columnAdapter1, column1info);
+			column1.setVisibility(View.VISIBLE);
+		}else{
+			column1.setVisibility(View.GONE);
+		}
 		
-		columnName1.setVisibility(View.GONE);
-		columnName2.setVisibility(View.GONE);
+		if(column2info != null && column2info.size() > 0){
+			column2Adapter = new ListAdapter(this);
+			column2.setAdapter(column2Adapter);
+			insertList(column2Adapter, column2info);
+			column2.setVisibility(View.VISIBLE);
+		}else{
+			column2.setVisibility(View.GONE);
+		}
+		
+	}
+	
+	private void initColumnsInfo(){
+		DataBaseHelper dbHelper = new DataBaseHelper(this);
+		
+		try{
+			dbHelper.openDataBase();
+		}catch(Exception e){
+			Logger.log(e);
+		}
+		
+		Vector<SimpleItem> units = dbHelper.getUnits();
+		
+		if(details instanceof Food){
+			Vector<olga.com.healthy.food.model.Details> vitamines = dbHelper.getVitamines();
+			Vector<olga.com.healthy.food.model.Details> minerals = dbHelper.getMinerals();
+			column1info = DataBaseHelper.mergeInfo(vitamines, ((Food) details).vitamines, units);
+			column2info = DataBaseHelper.mergeInfo(minerals, ((Food) details).minerals, units);
+		}else if(details instanceof Constituent){
+			Vector<olga.com.healthy.food.model.Details> food = dbHelper.getFood();
+			column1info = DataBaseHelper.mergeInfo(food, ((Constituent) details).food, units);
+			column2info = null;
+		}else{
+			column1info = null;
+			column2info = null;
+		}
 	}
 	
 	private void insertList(ListAdapter adapter, Vector<olga.com.healthy.food.model.Details> list){

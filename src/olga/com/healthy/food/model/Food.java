@@ -20,10 +20,10 @@ public class Food extends Details {
 	public Food(Details details)
 	{
 		super(details);
-		energy = new NutritionalValuePer100G(ENERGY_ID);
-		carbohydrates = new NutritionalValuePer100G(CARBOHYDRATES_ID);
-		protein = new NutritionalValuePer100G(PROTEIN_ID);
-		fat = new NutritionalValuePer100G(FAT_ID);
+		energy = new NutritionalValuePer100G(ENERGY_ID, "energy");
+		carbohydrates = new NutritionalValuePer100G(CARBOHYDRATES_ID, "carbohydtates");
+		protein = new NutritionalValuePer100G(PROTEIN_ID, "protein");
+		fat = new NutritionalValuePer100G(FAT_ID, "fat");
 		minerals = new Vector<NutritionalValuePer100G>();
 		vitamines = new Vector<NutritionalValuePer100G>();
 	}
