@@ -24,9 +24,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	final private static String DB_NAME = "smart_fooddy_database";
 	final private static int version = 1;
 	
-	final private static String VITAMINES_TABLE = "vitamines";
-	final private static String MINERALS_TABLE = "minerals";
-	final private static String FOOD_TABLE = "food";
+	final public static String VITAMINES_TABLE = "vitamines";
+	final public static String MINERALS_TABLE = "minerals";
+	final public static String FOOD_TABLE = "food";
 	final private static String FOOD_MINERALS_TABLE = "food_minerals";
 	final private static String FOOD_VITAMINES_TABLE = "food_vitamines";
 	final private static String UNITS_TABLE = "units";
@@ -118,12 +118,43 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		super.close();
 	}
 	
+	public Details getDetails(int id, String tableName){
+		Details result;
+		
+		Cursor cursor = db.query(tableName, null, ID_COLUMN + "=" + id, null, null, null, null);
+
+		if(!cursor.moveToFirst())
+		{
+			return null;
+		}
+		
+		if(tableName.equals(FOOD_TABLE)){
+			result = new Food();
+			result.id = id;
+			addFoodInfo(cursor, (Food)result);
+		}else if(tableName.equals(VITAMINES_TABLE) || tableName.equals(MINERALS_TABLE)){
+			result = new Constituent();
+			result.id = id;
+			if(tableName.equals(VITAMINES_TABLE)){
+				((Constituent)result).food = getFoodList(id, FOOD_VITAMINES_TABLE);
+			}else{
+				((Constituent)result).food = getFoodList(id, FOOD_MINERALS_TABLE);
+			}
+		}else{
+			throw new IllegalArgumentException("Do not support this table yet:" + tableName);
+		}
+		
+		insertDetails(cursor, result);
+
+		return result;
+	}
+	
 	public Vector<Details> getVitamines(){
 		Vector<Details> result = new Vector<Details>();
 		try{
 			Cursor cursor = db.query(VITAMINES_TABLE, null, null, null, null, null, null);
 			insertDetails(cursor, result);
-			addFoodList(result);
+			addFoodList(result, VITAMINES_TABLE);
 		}catch(Exception e){
 			Logger.log(e);
 		}
@@ -135,21 +166,41 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		{
 			throw new NullPointerException("One of the Input arguments is null");
 		}
-		int indexId = cursor.getColumnIndex(ID_COLUMN);
-		int indexName = cursor.getColumnIndex(NAME_COLUMN);
-		int indexDescription = cursor.getColumnIndex(DESCRIPTION_COLUMN);
 		if(!cursor.moveToFirst())
 		{
 			return;
 		}
+		int indexId = cursor.getColumnIndex(ID_COLUMN);
+		int indexName = cursor.getColumnIndex(NAME_COLUMN);
+		int indexDescription = cursor.getColumnIndex(DESCRIPTION_COLUMN);
+		
 		do{
 			Details details = new Details();
-			details.imageId = R.drawable.vitamin_icon;
-			details.id = cursor.getInt(indexId);
-			details.name = cursor.getString(indexName);
-			details.description = cursor.getString(indexDescription);
+			insertDetails(indexId, indexName, indexDescription, cursor, details);
 			result.add(details);
 		}while(cursor.moveToNext());
+	}
+	
+	private static void insertDetails(Cursor cursor, Details details){
+		if(cursor == null || details == null)
+		{
+			throw new NullPointerException("One of the Input arguments is null");
+		}
+		int indexId = cursor.getColumnIndex(ID_COLUMN);
+		int indexName = cursor.getColumnIndex(NAME_COLUMN);
+		int indexDescription = cursor.getColumnIndex(DESCRIPTION_COLUMN);
+		insertDetails(indexId, indexName, indexDescription, cursor, details);
+	}
+	
+	private static void insertDetails(int indexId, int indexName, int indexDescription, Cursor cursor, Details details){
+		if(cursor == null || details == null)
+		{
+			throw new NullPointerException("One of the Input arguments is null");
+		}
+		details.imageId = R.drawable.vitamin_icon;
+		details.id = cursor.getInt(indexId);
+		details.name = cursor.getString(indexName);
+		details.description = cursor.getString(indexDescription);
 	}
 	
 	public Vector<Details> getMinerals(){
@@ -157,7 +208,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		try{
 			Cursor cursor = db.query(MINERALS_TABLE, null, null, null, null, null, null);
 			insertDetails(cursor, result);
-			addFoodList(result);
+			addFoodList(result, MINERALS_TABLE);
 		}catch(Exception e){
 			Logger.log(e);
 		}
@@ -211,18 +262,44 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		}while(cursor.moveToNext());
 	}
 	
-	private void addFoodList(Vector<Details> constituentList)
+	private void addFoodInfo(Cursor cursor, Food food){
+		if(cursor == null || food == null)
+		{
+			throw new NullPointerException("One of the Input arguments is null");
+		}
+		int energy = cursor.getColumnIndex(ENERGY_COLUMN);
+		int energyUnits = cursor.getColumnIndex(ENERGY_UNITS_COLUMN);
+		int cargohydrates = cursor.getColumnIndex(CARBOHYDRATES_COLUMN);
+		int cargUnits = cursor.getColumnIndex(UNITS_CARBOHYDRATES_COLUMN);
+		int fat = cursor.getColumnIndex(FAT_COLUMN);
+		int fatUnits = cursor.getColumnIndex(FAT_UNITS_COLUMN);
+		int protein = cursor.getColumnIndex(PROTEIN_COLUMN);
+		int proteinUnits = cursor.getColumnIndex(PROTEIN_UNITS_COLUMN);
+		
+		food.energy.value = cursor.getDouble(energy);
+		food.energy.unitsId = cursor.getInt(energyUnits);
+		food.carbohydrates.value = cursor.getDouble(cargohydrates);
+		food.carbohydrates.unitsId = cursor.getInt(cargUnits);
+		food.fat.value = cursor.getDouble(fat);
+		food.fat.unitsId = cursor.getInt(fatUnits);
+		food.protein.value = cursor.getDouble(protein);
+		food.protein.unitsId = cursor.getInt(proteinUnits);
+		food.minerals = getMineralsList(food.id);
+		food.vitamines = getVitaminesList(food.id);
+	}
+	
+	private void addFoodList(Vector<Details> constituentList, String tableName)
 	{
 		for(int i = 0; i < constituentList.size(); i++)
 		{
 			Constituent element = new Constituent(constituentList.get(i));
-			element.food = getFoodList(element.id);
+			element.food = getFoodList(element.id, tableName);
 			constituentList.set(i, element);
 		}
 	}
 	
-	public Vector<NutritionalValuePer100G> getFoodList(int constituentId){
-		return getList(constituentId, ID_COLUMN, FOOD_VITAMINES_TABLE);
+	public Vector<NutritionalValuePer100G> getFoodList(int constituentId, String table){
+		return getList(constituentId, ID_COLUMN, table);
 	}
 	
 	public Vector<NutritionalValuePer100G> getVitaminesList(int foodId)

@@ -17,9 +17,18 @@ public class Food extends Details {
 	public Vector<NutritionalValuePer100G> minerals;
 	public Vector<NutritionalValuePer100G> vitamines;
 	
+	public Food(){
+		super();
+		initContainers();
+	}
+	
 	public Food(Details details)
 	{
 		super(details);
+		initContainers();
+	}
+	
+	private void initContainers(){
 		energy = new NutritionalValuePer100G(ENERGY_ID, "energy");
 		carbohydrates = new NutritionalValuePer100G(CARBOHYDRATES_ID, "carbohydtates");
 		protein = new NutritionalValuePer100G(PROTEIN_ID, "protein");

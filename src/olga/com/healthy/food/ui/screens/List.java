@@ -124,7 +124,7 @@ public class List extends ListActivity {
 		try{
 			Vector<Details> vitamines = dbHelper.getVitamines();
 			//vitamines.insertElementAt(getAddItem(), 0);
-			adapter.setList(vitamines);
+			adapter.setList(vitamines, DataBaseHelper.VITAMINES_TABLE);
 		}catch(Exception e){
 			Logger.log(e);
 		}
@@ -133,13 +133,13 @@ public class List extends ListActivity {
 	private void insertMinerals(ListAdapter adapter, DataBaseHelper dbHelper){
 		Vector<Details> minerals = dbHelper.getMinerals();
 		//minerals.insertElementAt(getAddItem(), 0);
-		adapter.setList(minerals);
+		adapter.setList(minerals, DataBaseHelper.MINERALS_TABLE);
 	}
 	
 	private void insertFood(ListAdapter adapter, DataBaseHelper dbHelper){
 		Vector<Details> food = dbHelper.getFood();
 		//food.insertElementAt(getAddItem(), 0);
-		adapter.setList(food);
+		adapter.setList(food, DataBaseHelper.FOOD_TABLE);
 	}
 	
 	private Details getAddItem()

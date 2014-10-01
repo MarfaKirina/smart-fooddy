@@ -21,6 +21,7 @@ public class ListAdapter extends BaseAdapter{
 	
 	private Context context;
 	private Vector<Details> list;
+	private String tableName;
 	
 	public ListAdapter(Context context){
 		super();
@@ -32,8 +33,9 @@ public class ListAdapter extends BaseAdapter{
 		list.add(item);
 	}
 	
-	public void setList(Vector<Details> vitamines){
-		this.list = vitamines;
+	public void setList(Vector<Details> list, String tableName){
+		this.list = list;
+		this.tableName = tableName;
 	}
 	
 	@Override
@@ -74,7 +76,8 @@ public class ListAdapter extends BaseAdapter{
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(context, olga.com.healthy.food.ui.screens.Details.class);
-				intent.putExtra(olga.com.healthy.food.ui.screens.Details.DETAILS, item);
+				intent.putExtra(olga.com.healthy.food.ui.screens.Details.ID, item.id);
+				intent.putExtra(olga.com.healthy.food.ui.screens.Details.TABLE_NAME, tableName);
 				context.startActivity(intent);
 			}
 		});
