@@ -84,9 +84,13 @@ public class ListAdapter extends BaseAdapter{
 				intent.putExtra(olga.com.healthy.food.ui.screens.Details.ID, item.id);
 				intent.putExtra(olga.com.healthy.food.ui.screens.Details.TABLE_NAME, tableName);
 				context.startActivity(intent);
+				onClickItem(v);
 			}
 		});
 		return contentView;
 	}
 	
+	public void onClickItem(View v){
+		
+	}
 }

@@ -80,9 +80,14 @@ public class Details extends Activity{
 		
 		column1 = (ListView)findViewById(R.id.column1);
 		column2 = (ListView)findViewById(R.id.column2);
-			
+		
 		if(column1info != null && column1info.size() > 0){
-			column1Adapter = new ListAdapter(this);
+			column1Adapter = new ListAdapter(this){
+				@Override
+				public void onClickItem(View v) {
+					Details.this.finish();
+				}
+			};
 			column1.setAdapter(column1Adapter);
 			insertList(column1Adapter, column1info, column1tableName);
 			column1.setVisibility(View.VISIBLE);
@@ -91,7 +96,12 @@ public class Details extends Activity{
 		}
 		
 		if(column2info != null && column2info.size() > 0){
-			column2Adapter = new ListAdapter(this);
+			column2Adapter = new ListAdapter(this){
+				@Override
+				public void onClickItem(View v) {
+					Details.this.finish();
+				}
+			};
 			column2.setAdapter(column2Adapter);
 			insertList(column2Adapter, column2info, column2tableName);
 			column2.setVisibility(View.VISIBLE);
