@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Vector;
 
-import olga.com.healthy.food.R;
 import olga.com.healthy.food.model.Constituent;
 import olga.com.healthy.food.model.Details;
 import olga.com.healthy.food.model.Food;
@@ -34,6 +33,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	final private static String ID_COLUMN = "id";
 	final private static String NAME_COLUMN = "name";
 	final private static String DESCRIPTION_COLUMN = "description";
+	final private static String IMAGE_PATH_COLUMN = "image_path";
 	final private static String ENERGY_COLUMN = "energy";
 	final private static String ENERGY_UNITS_COLUMN = "energy_units";
 	final private static String CARBOHYDRATES_COLUMN = "carbohydrates";
@@ -170,13 +170,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		{
 			return;
 		}
-		int indexId = cursor.getColumnIndex(ID_COLUMN);
-		int indexName = cursor.getColumnIndex(NAME_COLUMN);
-		int indexDescription = cursor.getColumnIndex(DESCRIPTION_COLUMN);
 		
 		do{
 			Details details = new Details();
-			insertDetails(indexId, indexName, indexDescription, cursor, details);
+			insertDetails(cursor, details);
 			result.add(details);
 		}while(cursor.moveToNext());
 	}
@@ -189,15 +186,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		int indexId = cursor.getColumnIndex(ID_COLUMN);
 		int indexName = cursor.getColumnIndex(NAME_COLUMN);
 		int indexDescription = cursor.getColumnIndex(DESCRIPTION_COLUMN);
-		insertDetails(indexId, indexName, indexDescription, cursor, details);
-	}
-	
-	private static void insertDetails(int indexId, int indexName, int indexDescription, Cursor cursor, Details details){
-		if(cursor == null || details == null)
-		{
-			throw new NullPointerException("One of the Input arguments is null");
-		}
-		details.imageId = R.drawable.vitamin_icon;
 		details.id = cursor.getInt(indexId);
 		details.name = cursor.getString(indexName);
 		details.description = cursor.getString(indexDescription);
@@ -232,14 +220,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		{
 			throw new NullPointerException("One of the Input arguments is null");
 		}
-		int energy = cursor.getColumnIndex(ENERGY_COLUMN);
-		int energyUnits = cursor.getColumnIndex(ENERGY_UNITS_COLUMN);
-		int cargohydrates = cursor.getColumnIndex(CARBOHYDRATES_COLUMN);
-		int cargUnits = cursor.getColumnIndex(UNITS_CARBOHYDRATES_COLUMN);
-		int fat = cursor.getColumnIndex(FAT_COLUMN);
-		int fatUnits = cursor.getColumnIndex(FAT_UNITS_COLUMN);
-		int protein = cursor.getColumnIndex(PROTEIN_COLUMN);
-		int proteinUnits = cursor.getColumnIndex(PROTEIN_UNITS_COLUMN);
 		
 		if(!cursor.moveToFirst()){
 			return;
@@ -247,16 +227,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		int i = 0;
 		do{
 			Food food = new Food(result.get(i));
-			food.energy.value = cursor.getDouble(energy);
-			food.energy.unitsId = cursor.getInt(energyUnits);
-			food.carbohydrates.value = cursor.getDouble(cargohydrates);
-			food.carbohydrates.unitsId = cursor.getInt(cargUnits);
-			food.fat.value = cursor.getDouble(fat);
-			food.fat.unitsId = cursor.getInt(fatUnits);
-			food.protein.value = cursor.getDouble(protein);
-			food.protein.unitsId = cursor.getInt(proteinUnits);
-			food.minerals = getMineralsList(food.id);
-			food.vitamines = getVitaminesList(food.id);
+			addFoodInfo(cursor, food);
 			result.set(i, food);
 			i++;
 		}while(cursor.moveToNext());
@@ -267,6 +238,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		{
 			throw new NullPointerException("One of the Input arguments is null");
 		}
+
+		int indexImagePath = cursor.getColumnIndex(IMAGE_PATH_COLUMN);
 		int energy = cursor.getColumnIndex(ENERGY_COLUMN);
 		int energyUnits = cursor.getColumnIndex(ENERGY_UNITS_COLUMN);
 		int cargohydrates = cursor.getColumnIndex(CARBOHYDRATES_COLUMN);
@@ -275,7 +248,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		int fatUnits = cursor.getColumnIndex(FAT_UNITS_COLUMN);
 		int protein = cursor.getColumnIndex(PROTEIN_COLUMN);
 		int proteinUnits = cursor.getColumnIndex(PROTEIN_UNITS_COLUMN);
-		
+
+		if(indexImagePath >= 0){
+			food.imagePath = cursor.getString(indexImagePath);
+		}
 		food.energy.value = cursor.getDouble(energy);
 		food.energy.unitsId = cursor.getInt(energyUnits);
 		food.carbohydrates.value = cursor.getDouble(cargohydrates);
@@ -373,7 +349,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	 * @param units - table of the units will be the same for all tables
 	 * @return
 	 */
-	public static Vector<Details> mergeInfo(Vector<Details> table, Vector<NutritionalValuePer100G> weights, Vector<SimpleItem> units) {
+	public static Vector<Details> joinInfo(Vector<Details> table, Vector<NutritionalValuePer100G> weights, Vector<SimpleItem> units) {
 		if(weights == null || table == null || table.size() == 0 || units == null){
 			return null;
 		}
@@ -385,6 +361,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 			
 			Details element = table.get(details.id - 1);
 			details.name = element.name;
+			details.imageId = element.imageId;
+			details.imagePath = element.imagePath;
 			details.description = "";
 			details.description += value.value;
 			details.description += " " + units.get(value.unitsId - 1).value;

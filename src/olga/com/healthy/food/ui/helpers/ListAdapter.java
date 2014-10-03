@@ -4,9 +4,9 @@ import java.util.Vector;
 
 import olga.com.healthy.food.R;
 import olga.com.healthy.food.model.Details;
+import olga.com.healthy.food.ui.Utils;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -61,7 +61,12 @@ public class ListAdapter extends BaseAdapter{
 		}
 		try{
 			ImageView image = (ImageView)contentView.findViewById(R.id.image);
-			image.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), item.imageId));
+			boolean isSet = Utils.setIconInView(image, item);
+			if(isSet){
+				image.setVisibility(View.VISIBLE);
+			}else{
+				image.setVisibility(View.GONE);
+			}
 		}catch(Exception e){
 			//do nothing
 		}

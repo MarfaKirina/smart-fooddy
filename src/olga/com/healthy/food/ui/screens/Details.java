@@ -7,11 +7,11 @@ import olga.com.healthy.food.db.DataBaseHelper;
 import olga.com.healthy.food.model.Constituent;
 import olga.com.healthy.food.model.Food;
 import olga.com.healthy.food.model.SimpleItem;
+import olga.com.healthy.food.ui.Utils;
 import olga.com.healthy.food.ui.helpers.ListAdapter;
 import olga.com.healthy.food.utils.Logger;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -65,10 +65,12 @@ public class Details extends Activity{
 		initColumnsInfo();
 		
 		image = (ImageView)findViewById(R.id.image);
-		try{
-			image.setImageBitmap(BitmapFactory.decodeResource(getResources(), details.imageId));
-		}catch(Exception e){
-			//do nothing
+		
+		boolean isSet = Utils.setIconInView(image, details);
+		if(isSet){
+			image.setVisibility(View.VISIBLE);
+		}else{
+			image.setVisibility(View.GONE);
 		}
 		name = (TextView)findViewById(R.id.name);
 		name.setText(details.name);
@@ -107,13 +109,13 @@ public class Details extends Activity{
 			Vector<olga.com.healthy.food.model.Details> vitamines = dbHelper.getVitamines();
 			Vector<olga.com.healthy.food.model.Details> minerals = dbHelper.getMinerals();
 			column1tableName = DataBaseHelper.VITAMINES_TABLE;
-			column1info = DataBaseHelper.mergeInfo(vitamines, ((Food) details).vitamines, units);
+			column1info = DataBaseHelper.joinInfo(vitamines, ((Food) details).vitamines, units);
 			column2tableName = DataBaseHelper.MINERALS_TABLE;
-			column2info = DataBaseHelper.mergeInfo(minerals, ((Food) details).minerals, units);
+			column2info = DataBaseHelper.joinInfo(minerals, ((Food) details).minerals, units);
 		}else if(details instanceof Constituent){
 			Vector<olga.com.healthy.food.model.Details> food = dbHelper.getFood();
 			column1tableName = DataBaseHelper.FOOD_TABLE;
-			column1info = DataBaseHelper.mergeInfo(food, ((Constituent) details).food, units);
+			column1info = DataBaseHelper.joinInfo(food, ((Constituent) details).food, units);
 			column2tableName = null;
 			column2info = null;
 		}else{

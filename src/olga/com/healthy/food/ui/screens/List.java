@@ -6,6 +6,7 @@ import java.util.Vector;
 import olga.com.healthy.food.R;
 import olga.com.healthy.food.db.DataBaseHelper;
 import olga.com.healthy.food.model.Details;
+import olga.com.healthy.food.model.Food;
 import olga.com.healthy.food.ui.helpers.ListAdapter;
 import olga.com.healthy.food.utils.Logger;
 import android.app.ListActivity;
@@ -144,7 +145,7 @@ public class List extends ListActivity {
 	
 	private Details getAddItem()
 	{
-		Details result = new Details();
+		Food result = new Food();
 		result.imageId = R.drawable.add_icon;
 		result.name = getResources().getString(R.string.add_item);
 		return result;

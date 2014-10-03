@@ -2,6 +2,8 @@ package olga.com.healthy.food.model;
 
 import java.util.Vector;
 
+import olga.com.healthy.food.R;
+
 public class Food extends Details {
 	private static final long serialVersionUID = -3292682687294137464L;
 	
@@ -19,12 +21,16 @@ public class Food extends Details {
 	
 	public Food(){
 		super();
+		imageId = R.drawable.meal_icon;
 		initContainers();
 	}
 	
 	public Food(Details details)
 	{
 		super(details);
+		if(imageId < 0){
+			imageId = R.drawable.meal_icon;
+		}
 		initContainers();
 	}
 	
