@@ -32,5 +32,7 @@
     <string name="meal">Meal</string>
     <string name="time">Time</string>
     <string name="add_item">Add</string>
+    <string name="change_time">Change Time</string>
+    <string name="add_food">Add Food</string>
 
 </resources>

@@ -27,6 +27,7 @@
         <activity android:name="olga.com.healthy.food.ui.screens.List"></activity>
         <activity android:name=".ui.screens.Details"></activity>
         <activity android:name=".ui.screens.Menu"></activity>
+        <activity android:name=".ui.screens.AddMeal"></activity>
     </application>
 
 </manifest>
