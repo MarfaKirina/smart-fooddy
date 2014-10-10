@@ -16,7 +16,11 @@ public class Constituent extends Details {
 	public Constituent(Details details)
 	{
 		super(details);
-		food = new Vector<NutritionalValuePer100G>();
+		if(details instanceof Constituent){
+			food = ((Constituent)details).food;
+		}else{
+			food = new Vector<NutritionalValuePer100G>();
+		}
 	}
 	
 }

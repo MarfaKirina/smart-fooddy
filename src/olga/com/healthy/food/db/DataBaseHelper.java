@@ -29,6 +29,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	final private static String FOOD_MINERALS_TABLE = "food_minerals";
 	final private static String FOOD_VITAMINES_TABLE = "food_vitamines";
 	final private static String UNITS_TABLE = "units";
+	final private static String DISH_TABLE = "dish";
+	final private static String MEAL_TABLE = "meal";
+	final private static String FOOD_DISH_TABLE = "food_dish";
+	final private static String MEAL_DISH_FOOD_TABLE = "meal_dish_food";
 	
 	final private static String ID_COLUMN = "id";
 	final private static String NAME_COLUMN = "name";
@@ -45,6 +49,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	final private static String FOOD_ID_COLUMN = "food_id";
 	final private static String WEIGHT_COLUMN = "weight";
 	final private static String UNITS_COLUMN = "units";
+	final private static String TIME_COLUMN = "time";
+	final private static String MEAL_ID_COLUMN = "meal_id";
+	final private static String IS_DISH_COLUMN = "is_dish";
 	
 	private Context context;
 	private SQLiteDatabase db;
@@ -355,14 +362,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		}
 		Vector<Details> result = new Vector<Details>();
 		for(int i = 0; i < weights.size(); i++){
-			Details details = new Details();
 			NutritionalValuePer100G value = weights.get(i);
-			details.id = value.constituentId;
 			
-			Details element = table.get(details.id - 1);
-			details.name = element.name;
-			details.imageId = element.imageId;
-			details.imagePath = element.imagePath;
+			Details element = table.get(value.constituentId - 1);
+			Details details = new Details(element);
 			details.description = "";
 			details.description += value.value;
 			details.description += " " + units.get(value.unitsId - 1).value;
@@ -370,5 +373,27 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		}
 		return result;
 	}
+	
+	public Vector<Details> getDish(){
+		Vector<Details> result = new Vector<Details>();
+		try{
+			Cursor cursor = db.query(DISH_TABLE, null, null, null, null, null, null);
+			insertDetails(cursor, result);
+			insertComponentsForDish(result);
+		}catch(Exception e){
+			Logger.log(e);
+		}
+		return result;
+	}
+	
+	public void insertComponentsForDish(Vector<Details> dish){
+		for(int i = 0; i < dish.size(); i++){
+			Constituent dishElem = new Constituent(dish.get(i));
+			dishElem.food = getList(dishElem.id, ID_COLUMN, FOOD_DISH_TABLE);
+			dish.set(i, dishElem);
+		}
+	}
+	
+	
 
 }

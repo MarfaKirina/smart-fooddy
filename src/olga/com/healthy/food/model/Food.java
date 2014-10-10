@@ -11,6 +11,9 @@ public class Food extends Details {
 	private static final int CARBOHYDRATES_ID = -2;
 	private static final int PROTEIN_ID = -3;
 	private static final int FAT_ID = -4;
+
+	public int imageId = -1;
+	public String imagePath = "";
 	
 	public NutritionalValuePer100G energy;
 	public NutritionalValuePer100G carbohydrates;
@@ -25,20 +28,28 @@ public class Food extends Details {
 		initContainers();
 	}
 	
-	public Food(Details details)
-	{
+	public Food(Details details){
 		super(details);
-		if(imageId < 0){
-			imageId = R.drawable.meal_icon;
+		if(details instanceof Food){
+			this.imageId = ((Food)details).imageId;
+			this.imagePath = ((Food)details).imagePath;
+			if(imageId < 0 && imagePath == null){
+				imageId = R.drawable.meal_icon;
+			}
+			initContainers();
 		}
-		initContainers();
+	}
+	
+	public Food(Food details)
+	{
+		this((Details)details);
 	}
 	
 	private void initContainers(){
-		energy = new NutritionalValuePer100G(ENERGY_ID, "energy");
-		carbohydrates = new NutritionalValuePer100G(CARBOHYDRATES_ID, "carbohydtates");
-		protein = new NutritionalValuePer100G(PROTEIN_ID, "protein");
-		fat = new NutritionalValuePer100G(FAT_ID, "fat");
+		energy = new NutritionalValuePer100G(ENERGY_ID);
+		carbohydrates = new NutritionalValuePer100G(CARBOHYDRATES_ID);
+		protein = new NutritionalValuePer100G(PROTEIN_ID);
+		fat = new NutritionalValuePer100G(FAT_ID);
 		minerals = new Vector<NutritionalValuePer100G>();
 		vitamines = new Vector<NutritionalValuePer100G>();
 	}

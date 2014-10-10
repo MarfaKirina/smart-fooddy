@@ -7,8 +7,6 @@ public class Details implements Serializable{
 	public int id;
 	public String name = "";
 	public String description = "";
-	public int imageId = -1;
-	public String imagePath = "";
 	
 	public Details(){
 		
@@ -18,7 +16,6 @@ public class Details implements Serializable{
 		this.id = details.id;
 		this.name = details.name;
 		this.description = details.description;
-		this.imageId = details.imageId;
 	}
 	
 	@Override
